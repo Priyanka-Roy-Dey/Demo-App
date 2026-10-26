@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Name from "./name"
 import ThemeToggle from './Toggle'
+import BookAppointment from './bookAppointment'
 
 const emptyForm = { name: '', age: '', email: '', address: '' }
 
@@ -92,6 +93,7 @@ function App() {
             </tbody>
           </table>
         )}
+  <BookAppointment />
       </div>
     </section>
   )
