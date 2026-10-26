@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useToggle=(defaultValue=false)=>{
+const useToggle=(defaultValue=false)=>{
 const[value, setValue]=useState(defaultValue)
 function showToggle(val){
     if(typeof val!=='boolean'){
