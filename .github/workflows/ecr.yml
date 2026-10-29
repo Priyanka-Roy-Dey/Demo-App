@@ -26,9 +26,30 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push image
+        id: image
         env:
           IMAGE: ${{ steps.ecr.outputs.registry }}/demo-app
         run: |
           docker build -t "$IMAGE:${{ github.sha }}" -t "$IMAGE:latest" .
           docker push "$IMAGE:${{ github.sha }}"
           docker push "$IMAGE:latest"
+          echo "uri=$IMAGE:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Download current task definition
+        run: aws ecs describe-task-definition --task-definition demo-app-task --query taskDefinition > task-definition.json
+
+      - name: Put new image in task definition
+        id: taskdef
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: demo-app
+          image: ${{ steps.image.outputs.uri }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.taskdef.outputs.task-definition }}
+          cluster: demo-cluster
+          service: demo-app-service
+          wait-for-service-stability: true
