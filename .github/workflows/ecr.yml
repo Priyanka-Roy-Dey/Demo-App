@@ -18,8 +18,8 @@ jobs:
       - name: Log in to AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::936719391115:role/github-demo-app-ecr
+          aws-region: us-east-1
 
       - name: Log in to ECR
         id: ecr
